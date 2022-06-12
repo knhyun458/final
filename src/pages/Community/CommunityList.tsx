@@ -3,65 +3,53 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 export const CommunityList = () => {
-  const { push } = useHistory();
-  const [rooms, setRooms] = useState([]);
+    const { push } = useHistory();
+    const [rooms, setRooms] = useState([]);
+    const [roomTitle, setRoomTitle] = useState('');
+    const [roomDetail, setRoomDetail] = useState('');
+    const [roomImage, setRoomImage] = useState('');
 
-  useEffect(() => {
-    const roomsData = axios
-      .get('http://localhost:1337/api/rooms')
-      .then((res) => {
-        console.log(res);
-        setRooms(res.data.data);
-        console.log(res.data.data);
-      });
-  }, []);
+    useEffect(() => {
+        const roomsData = axios
+            .get('http://localhost:1337/api/rooms')
+            .then((res) => {
+                console.log(res);
+                setRooms(res.data.data);
+                console.log(res.data.data);
+                const room = res.data.data.attributes;
+                setRoomTitle(room.title);
+                setRoomDetail(room.description);
+                setRoomImage(room.image);
+            });
+    }, []);
 
-  return (
-    <div>
-      <div className="text-4xl font-bold text-teal-900 mt-5 text-center">
-        Community
-      </div>
-
-      <div>
-        {rooms.map((room: any) => {
-          return (
-            <div
-              className="flex m-10 bg-teal-100 rounded-xl cursor-pointer"
-              onClick={() => push(`/rooms/${room.id}`)}
-            >
-              <img
-                src={room.attributes.image}
-                alt=""
-                className="w-20 h-20 rounded-full m-5"
-              />
-              <div className="text-2xl text-teal-900 font-semibold ml-5 mt-10">
-                {room.attributes.title}
-              </div>
+    return (
+        <div>
+            <div className="flex pt-8 min-h-screen bg-white dark:bg-gray-900">
+                <div className="container mx-auto">
+                    <div className="max-w-md mx-auto space-y-5">
+                        <div className="flex flex-row space-x-2 items-center">
+                            <a href="/"><img src="/back.png" alt="" className="w-6 h-6" /></a>
+                            <div className="font-bold text-xl">Community</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          );
-        })}
-        
-      </div>
 
-      <div className="relative">
-        <div className="fixed bottom-0 left-0 right-0 flex">
-          <div className="text-center py-4 text-teal-600 border border-teal-600 bg-white flex-auto rounded-tl-lg">
-            <button type="button" onClick={() => push('/')}>
-              홈
-            </button>
-          </div>
-          <div className="bg-teal-600 text-white text-center py-4 flex-auto">
-            <button type="button" onClick={() => push('/chat')}>
-              디엠
-            </button>
-          </div>
-          <div className="text-center py-4 text-teal-600 border border-teal-600 bg-white flex-auto rounded-tr-lg">
-            <button type="button" onClick={() => push('/more')}>
-              더보기
-            </button>
-          </div>
+            <div>
+                {rooms.map((room: any) => {
+                    return (
+                        <div className="border rounded-md h-56 bg-cover bg-[center_bottom_22rem] bg-[url('{roomImage}')]"
+                        onClick={() => push(`/coummunity/${room.id}`)}>
+                            <div className="mt-36 ml-8">
+                                <div className="text-white font-semibold text-xl">{roomTitle}</div>
+                                <div className="text-white text-sm">{roomDetail}</div>
+                            </div>
+                        </div>
+                    );
+                })}
+
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };

@@ -20,7 +20,7 @@ export const LoginPage = () => {
         password: password,
       })
       .then((response) => {
-        // Handle susccess.s
+        // Handle susccess.
         console.log('Well done!');
         console.log('User token', response.data.jwt);
         localStorage.setItem('token', response.data.jwt);
@@ -30,6 +30,7 @@ export const LoginPage = () => {
       .catch((error) => {
         // Handle error.
         console.log('An error occurred:', error.response);
+        alert('아이디와 비밀번호를 다시 확인해주세요.');
       });
   };
 

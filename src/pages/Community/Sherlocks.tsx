@@ -18,10 +18,9 @@ export function Community({ match }: RouteComponentProps<MatchParams>) {
             .get(`http://localhost:1337/api/rooms/${id}?populate=*`)
             .then((res) => {
                 setMessages(res.data.data.attributes.messages.data);
-                const title = res.data.data.attributes.title;
-                const description = res.data.data.attributes.description;
-                setRoomTitle(title);
-                setRoomDetail(description);
+                const room = res.data.data.attributes;
+                setRoomTitle(room.title);
+                setRoomDetail(room.description);
             });
     }, []);
 
@@ -33,7 +32,7 @@ export function Community({ match }: RouteComponentProps<MatchParams>) {
                     <a href="/"><img src="/back.png" alt="" className="w-6 h-6" /></a>
                     <div>
                         <div className="font-bold text-xl">{roomTitle}</div>
-                        <div className="text-xs text-gray-600 font-extralight">{roomDetail}</div>
+                        <div className="text-xs text-gray-600 font-extralight mb-4">{roomDetail}</div>
                     </div>
                 </div>
 
@@ -42,16 +41,20 @@ export function Community({ match }: RouteComponentProps<MatchParams>) {
                         {messages.map((msg: any) => {
                             console.log(msg)
                             if (msg.attributes.username === localStorage.getItem('username')) {
-                                return (<div key={msg.id}>
-                                    <div className="text-xl text-teal-900 m-5 bg-teal-100 rounded-l p-3">
-                                        <h1>내꺼 {msg.username} {msg.attributes.content}</h1>
+                                return (<div key={msg.id} className="flex flex-row space-x-2 items-center mb-3">
+                                    <div className="font-bold text-gray-500 text-xs">
+                                        {msg.attributes.username}
+                                    </div>
+                                    <div className="text-black text-sm font-light border rounded-md py-1 px-2">
+                                        {msg.attributes.content}
                                     </div>
                                 </div>)
                             } else {
-                                return (<div key={msg.id}>
-                                    <div className="text-xl text-teal-900 m-5 bg-teal-100 rounded-l p-3">
-                                        <h1>{msg.username} {msg.attributes.content}</h1>
+                                return (<div key={msg.id} className="flex flex-row space-x-2 items-center justify-end">
+                                    <div className="text-black text-sm font-light border rounded-md py-1 px-2 mb-4">
+                                        {msg.attributes.content}
                                     </div>
+
                                 </div>)
                             }
                         })}
