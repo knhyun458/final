@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import data from '../db/data.json';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { replace } = useHistory();
+  const { push } = useHistory();
 
-  const users = data.users;
 
   const checkUser = () => {
     if (email == '' || password == '') {
@@ -15,19 +14,25 @@ export const LoginPage = () => {
       return;
     }
 
-    for (let i = 0; i < users.length; i++) {
-      if (email == users[i].email && password == users[i].password) {
-        alert('로그인 성공');
-        replace('/');
-        return;
-
-      } else if (email == users[i].email && password !== users[i].password) {
-        alert('비밀번호가 틀립니다');
-        return;
-      }
-    }
-    alert('로그인 실패');
+    axios
+      .post('http://localhost:1337/api/auth/local', {
+        identifier: email,
+        password: password,
+      })
+      .then((response) => {
+        // Handle susccess.s
+        console.log('Well done!');
+        console.log('User token', response.data.jwt);
+        localStorage.setItem('token', response.data.jwt);
+        localStorage.setItem('username', response.data.user.username);
+        push('/');
+      })
+      .catch((error) => {
+        // Handle error.
+        console.log('An error occurred:', error.response);
+      });
   };
+
   return (
     <>
       <div className="flex items-center min-h-screen bg-white dark:bg-gray-900">
@@ -86,5 +91,5 @@ export const LoginPage = () => {
         ©knhyun
       </div>
     </>
-  )
+  );
 };
