@@ -6,8 +6,8 @@ import { SignupPage } from './SignupPage';
 import { Loading } from './Loading';
 import { SearchPage } from './SearchPage';
 import { Community } from './Community/Sherlocks';
-import { BookDetail } from './BookDetail';
 import { CommunityList } from './Community/CommunityList';
+import { BookDetail } from './BookDetail';
 
 export const Router = () => {
   return (
@@ -18,7 +18,7 @@ export const Router = () => {
       <Route path="/search" component={SearchPage} />
       <Route path="/community/:id" component={Community} exact />
       <Route path="/community" component={CommunityList} />
-      <Route path="/bookdetail" component = {BookDetail} />
+      <Route path="/bookdetail/:id" component={BookDetail} exact/>
       <Route path="/" component={HomePage} exact />
       <Route path="/">
 

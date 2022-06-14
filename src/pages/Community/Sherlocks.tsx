@@ -12,6 +12,28 @@ export function Community({ match }: RouteComponentProps<MatchParams>) {
     const { id } = match.params;
     const [roomTitle, setRoomTitle] = useState('');
     const [roomDetail, setRoomDetail] = useState('');
+    const [content, setContent] = useState('');
+    const sendMsg = () => {
+        if (content != '') {
+            axios
+                .post('http://localhost:1337/api/messages', {
+                    data: {
+                        content: content,
+                        room: +id,
+                        author: 1,
+                    },
+                })
+                .then((response) => {
+                    // Handle success.
+
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    // Handle error.
+                    console.log('An error occurred:', error.response);
+                });
+        }
+    };
 
     useEffect(() => {
         const roomsData = axios
@@ -40,8 +62,16 @@ export function Community({ match }: RouteComponentProps<MatchParams>) {
                     <div>
                         {messages.map((msg: any) => {
                             console.log(msg)
-                            if (msg.attributes.username === localStorage.getItem('username')) {
-                                return (<div key={msg.id} className="flex flex-row space-x-2 items-center mb-3">
+                            if (msg.attributes.username === null ) {
+                                return (<div key={msg.id} className="flex flex-row space-x-2 items-center justify-end">
+                                    <div className="text-black text-sm font-light border rounded-md py-1 px-2 mb-1">
+                                        {msg.attributes.content}
+                                    </div>
+
+                                </div>)
+                            }
+                            if (msg.attributes.username !== localStorage.getItem('username') || msg.attributes.username === '') {
+                                return (<div key={msg.id} className="flex flex-row space-x-2 items-center my-2">
                                     <div className="font-bold text-gray-500 text-xs">
                                         {msg.attributes.username}
                                     </div>
@@ -51,7 +81,7 @@ export function Community({ match }: RouteComponentProps<MatchParams>) {
                                 </div>)
                             } else {
                                 return (<div key={msg.id} className="flex flex-row space-x-2 items-center justify-end">
-                                    <div className="text-black text-sm font-light border rounded-md py-1 px-2 mb-4">
+                                    <div className="text-black text-sm font-light border rounded-md py-1 px-2 mb-1">
                                         {msg.attributes.content}
                                     </div>
 
@@ -69,10 +99,17 @@ export function Community({ match }: RouteComponentProps<MatchParams>) {
                         id="message"
                         placeholder="Send a message"
                         className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500 font-extralight text-sm"
+                        value={content}
+                        onChange={(event) => {
+                            setContent(event.target.value);
+                        }}
                     />
                     <button
                         type="button"
                         className="h-12 bg-black text-white font-light border rounded-md w-20"
+                        onClick={() => {
+                            sendMsg();
+                        }}
                     >Send</button>
                 </div>
 
