@@ -36,27 +36,24 @@ export const HomePage = ({ match }: RouteComponentProps<MatchParams>) => {
                 </div>
                 <div className="font-Raleway text-black text-4xl font-bold">readers</div>
               </div>
-              <a href="/search"><img src="/search.png" alt="" className="h-10 w-10 mb-1 w-full" /></a>
+              <div className="flex flex-row space-x-2">
+              <a href="/community"><img src="chat.png" alt="" className="h-10 w-10 mb-1 w-full" /></a>
+                <a href="/search"><img src="/search.png" alt="" className="h-10 w-10 mb-1 w-full" /></a>
+              </div>
             </div>
 
             <div className="space-y-3">
               <div>
-                {/* <p>rooms</p> */}
-                {rooms.map((room: any) => {
-                  return (
                     <>
-                      {/* <p>room: {room.id}</p> */}
                       <div className={`border rounded-md h-56 bg-cover bg-[center_bottom_22rem]`}
-                        style={{ backgroundImage: `url('${room.attributes.image}` }}
-                        onClick={() => push(`/community/${room.id}`)}>
+                        style={{ backgroundImage: `url('https://images.unsplash.com/photo-1633266841047-719b5f737149?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGRldGVjdGl2ZXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60` }}
+                        onClick={() => push(`/community/1`)}>
                         <div className="mt-36 ml-8">
-                          <div className="text-white font-semibold text-xl">{room.attributes.title}</div>
-                          <div className="text-white font-light text-sm">{room.attributes.description}</div>
+                          <div className="text-white font-semibold text-xl">Sherlocks</div>
+                          <div className="text-white font-light text-sm">추리소설을 사랑하는 사람들의 모임입니다.</div>
                         </div>
                       </div>
                     </>
-                  );
-                })}
               </div>
             </div>
             <div className="space-y-2">
@@ -68,14 +65,14 @@ export const HomePage = ({ match }: RouteComponentProps<MatchParams>) => {
                   className="w-28 h-36 border rounded-md" /></a>
                 <a href="/bookdetail/5"><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTAyMjhfMjg0%2FMDAxNjE0NTA0NTExMzky.L7WKDqCBDslbQnkSBL89FD-WX7MKkBJEmNVMe8LFFrEg.k1sK1Mu0yD2bqCVf18xlY9GsN_fjZ8zy-0nyqmNDVKYg.JPEG.jp1324%2Fx9788972754190.jpg&type=sc960_832" alt=""
                   className="w-28 h-36 border rounded-md" /></a>
-               <a href="/bookdetail/2"><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fshop1.phinf.naver.net%2F20210526_223%2F16220042011027vQSQ_JPEG%2F23140035925890603_951049888.jpg&type=sc960_832" alt=""
+                <a href="/bookdetail/2"><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fshop1.phinf.naver.net%2F20210526_223%2F16220042011027vQSQ_JPEG%2F23140035925890603_951049888.jpg&type=sc960_832" alt=""
                   className="w-28 h-36 border rounded-md" /></a>
               </div>
             </div>
             <div className="space-y-2">
               <div className="font-bold text-xl">에세이 추천</div>
               <div className="flex flex-row space-x-3">
-              <a href="/bookdetail/9"><img src="https://bookthumb-phinf.pstatic.net/cover/214/733/21473397.jpg?udate=20220429" alt=""
+                <a href="/bookdetail/9"><img src="https://bookthumb-phinf.pstatic.net/cover/214/733/21473397.jpg?udate=20220429" alt=""
                   className="w-28 h-36 border rounded-md" /></a>
                 <a href="/bookdetail/10"><img src="https://bookthumb-phinf.pstatic.net/cover/161/083/16108307.jpg?udate=20220414" alt=""
                   className="w-28 h-36 border rounded-md" /></a>

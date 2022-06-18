@@ -31,7 +31,7 @@ export const CommunityList = () => {
                                 return (
                                     <>
                                         {/* <p>room: {room.id}</p> */}
-                                        <div className={`border rounded-md h-56 bg-cover bg-[center_bottom_22rem]`}
+                                        <div className={`border rounded-md h-56 bg-cover bg-[center_bottom_22rem] mb-2`}
                                             style={{ backgroundImage: `url('${room.attributes.image}` }}
                                             onClick={() => push(`/community/${room.id}`)}>
                                             <div className="mt-36 ml-8">

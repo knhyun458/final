@@ -43,6 +43,7 @@ export function Community({ match }: RouteComponentProps<MatchParams>) {
                 const room = res.data.data.attributes;
                 setRoomTitle(room.title);
                 setRoomDetail(room.description);
+                console.log(res.data.data.attributes.messages.data);
             });
     }, []);
 
@@ -62,7 +63,7 @@ export function Community({ match }: RouteComponentProps<MatchParams>) {
                     <div>
                         {messages.map((msg: any) => {
                             console.log(msg)
-                            if (msg.attributes.username === null ) {
+                            if (msg.attributes.username === null) {
                                 return (<div key={msg.id} className="flex flex-row space-x-2 items-center justify-end">
                                     <div className="text-black text-sm font-light border rounded-md py-1 px-2 mb-1">
                                         {msg.attributes.content}

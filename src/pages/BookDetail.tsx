@@ -15,19 +15,20 @@ export function BookDetail({ match }: RouteComponentProps<MatchParams>) {
     const [bookRate, setBookRate] = useState([]);
     const [bookDescription, setBookDescription] = useState('');
     const [bookImage, setBookImage] = useState('');
-    const [bookReview, setBookReview] = useState([]);
     const [bookTag, setBookTag] = useState([]);
-    const [content, setContent] = useState('');
-    const [reviewUser, setReviewUser] = useState('');
+    const [comment, setComment] = useState('');
+    const [tag, setTag] = useState('');
+    const [bookComments, setBookComments] = useState([]);
 
+    // console.log(localStorage.getItem('username'))
     const addReview = () => {
-        if (content != '') {
+        if (comment != '') {
             axios
                 .post('http://localhost:1337/api/comments', {
                     data: {
-                        commentContent: content,
+                        commentContent: comment,
                         book: +id,
-                        author: 1,
+                        user: localStorage.getItem('username'),
                     },
                 })
                 .then((response) => {
@@ -42,11 +43,11 @@ export function BookDetail({ match }: RouteComponentProps<MatchParams>) {
         }
     };
     const addTag = () => {
-        if (content != '') {
+        if (tag != '') {
             axios
                 .post('http://localhost:1337/api/tags', {
                     data: {
-                        tagName: content,
+                        tagName: tag,
                         book: +id,
                         author: 1,
                     },
@@ -62,77 +63,28 @@ export function BookDetail({ match }: RouteComponentProps<MatchParams>) {
                 });
         }
     };
-    // rating 함수 구현
-    // const score = (a : number) => {
-    //     if(a===1){
-    //     axios
-    //         .put('http://localhost:1337/api/books/:id', {
-    //             data:{
-    //                 bookRate : 1
-    //             }
-    //         })
-    //     }; if(a===2){
-    //         axios
-    //             .post('http://localhost:1337/api/ratings', {
-    //                 data:{
-    //                     bookRate : 2
-    //                 }
-    //             })
-    //         }; if(a===3){
-    //             axios
-    //                 .post('http://localhost:1337/api/ratings', {
-    //                     data:{
-    //                         bookRate : 3
-    //                     }
-    //                 })
-    //             }; if(a===4){
-    //                 axios
-    //                     .post('http://localhost:1337/api/ratings', {
-    //                         data:{
-    //                             bookRate : 4
-    //                         }
-    //                     })
-    //                 }; if(a===5){
-    //                     axios
-    //                         .post('http://localhost:1337/api/ratings', {
-    //                             data:{
-    //                                 bookRate : 5
-    //                             }
-    //                         })
-    //                     };
-
-    // };
-
-    // function average(arr: string | any[]) {
-    //     var answer = 0;
-    //     let sum = 0;
-
-    //     for (let i = 0; i < arr.length; i++) {
-    //         sum += arr[i];   // 배열의 요소들을 하나씩 더한다.
-    //     }
-    //     return answer = sum / arr.length; // 더한 값과 배열의 길이(=요소 갯수)를 나눈다.
-    // }
-
 
     useEffect(() => {
         const bookData = axios
-            .get(`http://localhost:1337/api/books/${id}?populate=*`)
+            .get(`http://localhost:1337/api/books/${id}?populate=category,comments.user,ratings,tags`)
             .then((res) => {
-                console.log(res);
-                console.log(res.data.data);
                 const book = res.data.data.attributes;
                 setBookTitle(book.bookName);
                 setBookDescription(book.bookDescription);
                 setBookCategory(book.category.data.attributes.categoryName);
                 setBookImage(book.bookThumbnail);
                 setBookWriter(book.bookWriter);
-                setBookReview(book.comments.data[0].attributes.commentContent);
-                setReviewUser(book.comments.data[0].attributes.user);
+                setBookComments(book.comments.data);
                 setBookRate(book.ratings.data[0].attributes.ratingScore);
                 setBookTag(book.tags.data[0].attributes.tagName);
-                console.log(book.category)
+                // console.log(book.comments.data[0].attributes.commentContent);
+                console.log(book.comments.data);
+                console.log(comment)
+
             });
+
     }, []);
+
 
     return <div className="flex pt-8 min-h-screen bg-white dark:bg-gray-900">
         <div className="container mx-auto">
@@ -176,14 +128,14 @@ export function BookDetail({ match }: RouteComponentProps<MatchParams>) {
 
                 <div className="flex flex-row space-x-0.5 justify-center">
                     <input
-                        type="text"
+                        type="tag"
                         name="tag"
                         id="tag"
                         placeholder="Add a tag"
                         className="w-54 px-3 py-1 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500 font-extralight text-sm"
-                        value={content}
+                        value={tag}
                         onChange={(event) => {
-                            setContent(event.target.value);
+                            setTag(event.target.value);
                         }}
                     />
                     <button
@@ -200,19 +152,33 @@ export function BookDetail({ match }: RouteComponentProps<MatchParams>) {
                         <div className="flex flex-row space-x-2 items-center my-2">
                             {/* <div className="font-bold text-gray-500 text-xs">{reviewUser}</div> */}
                             {/* 유저 불러오기 */}
-                            <div className="text-black text-sm font-light border rounded-md py-1 px-2">{bookReview}</div>
+                            {bookComments.map((comment: any) => {
+                                const { attributes: { commentContent, user } } = comment;
+                                console.log('user: ', user)
+                                console.log('user.data: ', user.data)
+                                console.log('user: ', user)
+                                const username = user.data?.attributes?.username
+                                return (<div key={comment.id} className="flex flex-row space-x-2 items-center justify-end">
+                                    <div className="text-black text-sm font-light border rounded-md py-1 px-2">
+                                        {commentContent}
+                                    </div>
+                                    <div className="text-black text-sm font-light border rounded-md py-1 px-2">{username}</div>
+                                </div>
+                                )
+                            })}
+
                         </div>
                     </div>
                     <div className="flex flex-row space-x-0.5">
                         <input
-                            type="text"
+                            type="comment"
                             name="comment"
                             id="comment"
                             placeholder="Add a comment"
                             className="w-full px-3 py-1 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500 font-extralight text-sm"
-                            value={content}
+                            value={comment}
                             onChange={(event) => {
-                                setContent(event.target.value);
+                                setComment(event.target.value);
                             }}
                         />
                         <button
